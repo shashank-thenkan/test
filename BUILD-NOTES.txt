@@ -1,0 +1,44 @@
+RE.LOG HOMEPAGE REFINEMENT BUILD
+Based on Build 09.3.
+
+Changes:
+- Added a subtle fixed viewport frame to evoke a contained terminal/screen interface.
+- Reworked homepage editorial cards into clickable Field Notes with meaningful destinations and clear calls to action.
+- Renamed the secondary image-led collection to The Cabinet and upgraded its cards with hover treatments and captions.
+- Rebuilt Oliver's client-side interaction lifecycle: first-contact state is only marked complete when the visitor enters the workspace; refresh before completion resumes the introduction; completed first-contact does not replay.
+- Added a persistent launcher, returning visitor greetings, contextual command responses, session-persisted conversation, and stable message keys.
+- Removed duplicated subscription dialogue so the registration prompt appears once.
+
+Notes:
+- Existing subscription API and its environment requirements are unchanged.
+- This build has not been production-build tested because dependency installation did not complete in the build environment. Run `npm install` and `npm run build` before deployment.
+- The new Field Notes and Cabinet entries are editorial placeholders linking to existing site destinations. Replace them with CMS-managed content when CMS integration is implemented.
+
+
+BUILD 10.1 CORRECTIONS
+- Preserve the existing first-contact flag from Build 09.3 (relog_intro_seen_v2) when migrating to the new flag.
+- Mark first contact as seen immediately when the introduction starts, so refresh cannot replay it.
+- Reopening Oliver now appends a distinct returning line instead of replaying the first-contact introduction.
+- Reopen lines rotate deterministically between visits.
+- Site frame opacity is fully opaque; the border is no longer faded.
+
+
+BUILD 11 — CMS CONTENT + IDENTITY REFRESH
+=========================================
+- Added a shared server-side content loader at content/index.ts. It reads Pages CMS Markdown files from content/logs, content/articles and content/materials.
+- Published Logs are assembled by issue_number. Published articles are associated through parent_issue_number. Log article_slugs controls display order when supplied; otherwise matching articles are listed by file order.
+- Published supplementary material is read from content/materials and attached by parent_article or parent_issue_number.
+- Homepage, archive, experiments, library and transmission reader now use CMS-backed content rather than content/editions.ts.
+- Oliver receives the published transmission index from the server layout and uses it for /latest and /random.
+- Added a reusable four-corner / phosphor-eye SignalMark component for the Re.Log brand and Oliver interface.
+- Updated the design palette to near-black, warm ivory, olive and phosphor green. Headings now use Space Grotesk, body copy DM Sans, and system labels IBM Plex Mono. The wordmark is Re.Log with one period.
+- Added `gray-matter` and `marked` dependencies for CMS frontmatter and Markdown rendering.
+- Corrected Pages CMS relationship field labels to use parent_issue_number.
+- Removed the stale nested relog-website copy from the repository ZIP to avoid two competing project roots.
+
+IMPORTANT TEST NOTES
+--------------------
+- The current CMS test Log and articles are drafts. They will not appear publicly until their status is changed to published in Pages CMS.
+- Set Log 001 and its three test articles to Published only when ready to test the live website. They can be returned to Draft afterwards.
+- Add MAILERLITE_API_TOKEN and MAILERLITE_GROUP_ID in Vercel environment variables before testing signup.
+- npm install / production build could not be completed in this environment because package installation timed out. Deploy only after running npm install and npm run build locally or allowing Vercel to build; review any build errors before considering it verified.

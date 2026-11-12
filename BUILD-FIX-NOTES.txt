@@ -1,0 +1,27 @@
+RE.LOG BUILD FIX — DUPLICATE NESTED PROJECT REMOVED
+
+Root cause found in the uploaded GitHub ZIP:
+
+The repository contained a second, stale Next.js project at:
+  relog-website/
+
+The root tsconfig.json includes:
+  "**/*.ts"
+  "**/*.tsx"
+
+and excludes only node_modules. Therefore TypeScript also checked the stale nested project.
+The nested copy contained the old app/archive/page.tsx, which imported the legacy editions array
+and rendered <ArchiveBrowser /> without the required editions and articles props.
+
+This is exactly the path reported by Vercel:
+  ./relog-website/app/archive/page.tsx
+
+The actual root app/archive/page.tsx was already correct.
+
+Correction:
+- Removed the duplicate nested relog-website/ project.
+- Kept the repository-root Next.js application and its CMS integration unchanged.
+- Kept the root .pages.yml and CMS content.
+- Kept tsconfig incremental compilation disabled.
+
+No CMS schema or loader rewrite was needed to fix this specific build failure.

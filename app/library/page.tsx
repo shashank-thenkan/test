@@ -1,0 +1,9 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { getContent } from "@/content";
+export const metadata: Metadata = { title: "Library" };
+export default async function LibraryPage() {
+ const {editions,articles}=await getContent();
+ const items=articles.flatMap(a=>a.materials.map(m=>({material:m,article:a,edition:editions.find(e=>e.number===a.parent_issue_number)})));
+ return <div className="section-wrap page-section directory-page"><div className="page-kicker"><span>DIRECTORY: /LIBRARY</span><span>ACCESS: PUBLIC</span></div><div className="page-intro"><p className="eyebrow">REFERENCES, FINDS &amp; WORKING NOTES</p><h1>The Library</h1><p>A shelf for the material gathered along the way: research notes, useful references, datasets, templates and other things worth keeping.</p></div><div className="archive-toolbar"><span>{String(items.length).padStart(2,"0")} MATERIALS CATALOGUED</span><span>BY TRANSMISSION</span></div>{items.length?<div className="directory-entry-list">{items.map(({material,article,edition},i)=><article className="directory-entry library-entry" key={`${article.slug}-${material.title}`}><div className="directory-entry-meta"><span>{material.material_type?.toUpperCase()}</span><span>FILE {String(i+1).padStart(2,"0")}</span></div><h2>{material.title}</h2><p>{material.description}</p>{edition&&<div className="library-source"><span>FROM: {article.title}</span><Link href={`/transmissions/${edition.slug}#${article.slug}`}>VIEW SOURCE TRANSMISSION ↗</Link></div>}</article>)}</div>:<div className="directory-empty"><p>The shelves are being catalogued. New references and supplementary files will appear here as they are added to transmissions.</p><Link href="/archive">BROWSE THE TRANSMISSION ARCHIVE ↗</Link></div>}<div className="directory-backlinks"><Link href="/archive">VIEW ALL TRANSMISSIONS ↗</Link><Link href="/experiments">OPEN EXPERIMENTS ↗</Link></div></div>;
+}

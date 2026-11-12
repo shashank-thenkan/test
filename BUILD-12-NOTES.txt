@@ -1,0 +1,23 @@
+RE.LOG BUILD 12 — FRESH CMS INTEGRATION
+
+This build replaces the previous CMS content integration with a new implementation.
+
+CMS content source:
+- content/logs/*.md
+- content/articles/*.md
+- content/materials/*.md
+
+Each Markdown file uses YAML frontmatter for editorial metadata and a Markdown body for the actual content.
+Logs are identified by issue_number. Articles and issue-level supplementary materials link through parent_issue_number.
+Article-level supplementary materials link through parent_article.
+
+The website reads content through lib/relog-content.ts. content/index.ts is only the public export surface.
+Only published Logs and published Articles belonging to published Logs are exposed publicly.
+Draft content remains in the repository/CMS but is not returned to public pages.
+
+Important:
+- Keep the repository .git directory when replacing files locally.
+- Vercel Root Directory should remain blank (repository root).
+- Run `npm install` then `npm run build` to verify the production build.
+- Set MAILERLITE_API_TOKEN and MAILERLITE_GROUP_ID in Vercel before testing subscriptions.
+- A full Next.js production build could not be completed in the preparation environment because npm dependency installation timed out.
